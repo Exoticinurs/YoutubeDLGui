@@ -1,4 +1,10 @@
 import os
+from tkinter import filedialog
 
-def changeDownloadDir(dir):
-    os.chdir(dir)
+directory = ""
+
+def changeDownloadDir():
+    global directory
+    directory = filedialog.askdirectory()
+    os.chdir(directory)
+    print(directory)
