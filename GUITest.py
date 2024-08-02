@@ -1,6 +1,8 @@
 import customtkinter
 import changeDir
 import downloadFunc
+import threading
+
 
 
 def updateOptionMenu(choice):
@@ -15,6 +17,7 @@ def updateDirNameHeader():
     labelwithdir.configure(text="Folder Opened: "+changeDir.directory)
 
 def downloadFile(link):
+    print(threading.active_count())
     global labelwithdir
     filetype = labelwithdir.cget("text")
     if filetype == "Audio":
@@ -23,12 +26,12 @@ def downloadFile(link):
         downloadFunc.downloadVideo(link)
     else:
         downloadFunc.downloadAudio(link)
-
-
+ 
 def main():
         global labelwithtype
         global labelwithdir
-
+        global entry1
+        
         customtkinter.set_appearance_mode("system")
         customtkinter.set_default_color_theme("blue")
 
@@ -53,16 +56,20 @@ def main():
         dropdown = customtkinter.CTkOptionMenu(master=frame, values= ['Audio', 'Video'], width=140, command=updateOptionMenu)
         dropdown.place(x=10, y=80)
                                                 #Trying to get text type from values list.. not needed
-        labelwithtype = customtkinter.CTkLabel(master=frame, text=f"Selected Type: ")
+        labelwithtype = customtkinter.CTkLabel(master=frame, text=f"Selected Type: Audio")
         labelwithtype.place(y=80,x=155)
         
         
-        button = customtkinter.CTkButton(master=frame, text="Download!", command=lambda: downloadFile(entry1.get()), hover_color="#0932b0", width= 300)
+        button = customtkinter.CTkButton(master=frame, text="Download!", command=lambda: threading.Thread(downloadFile(entry1.get()), name="Downloader").start(), hover_color="#0932b0", width= 300)
         button.place(x=40, y=140)
+
         
         root.mainloop()
+        
+
 
 
 if __name__ == "__main__":
-    main()    
+    threading.Thread(main()).start()
+      
     
